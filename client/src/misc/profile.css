@@ -1,0 +1,26 @@
+.follow-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.follow-icon > svg {
+  width: 25px;
+  height: 30px;
+  margin-right: 10px;
+  padding: 0;
+}
+.bar-icon {
+  border-left: 1px solid black;
+  margin: 0 10px 0 10px;
+}
+.follow-icon > h3 {
+  margin: 0;
+}
+.follow {
+  display: flex;
+  justify-content: center;
+}
+.nav-underline .nav-link {
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,55 @@
+
+.wp {
+  margin: 3% 25%;
+  padding: 30px;
+  background: linear-gradient(45deg, #f2f3ea, #e9d8dc);
+  border-radius: 20px;
+}
+
+.head-wp {
+  color: #000;
+}
+.selected {
+  background-color: #e7d5df;
+  padding: 5px;
+  border-radius: 100%; /* กำหนดสีพื้นหลังเมื่อเลือกรูป */
+  transform: scale(1.1); /* เพิ่มขนาดของไอคอนเล็กน้อยเมื่อถูกเลือก */
+  transition: transform 0.3s ease; /* เพิ่มเอฟเฟคขยายเล็กน้อยด้วยการใช้ transition */
+}
+.option-type {
+  display: flex;
+  justify-content: center; /* จัดวางตรงกลางแนวนอน */
+  align-items: center; /* จัดวางตรงกลางแนวตั้ง */
+  margin: 20px;
+}
+
+.option-type img {
+  width: 70px; /* กำหนดขนาดรูปภาพตัวเลือกเป็น 60px */
+  margin-right: 20px;
+  justify-content: center;
+  padding: 5px;
+}
+
+.alltype {
+  margin-top: 15px;
+}
+.post {
+  background-color: #433e49;
+  color: white;
+  padding: 10px;
+  width: 100px;
+  margin-right: 5px;
+  border-radius: 10px;
+}
+.cancel {
+  background-color: #919191;
+  color: white;
+  padding: 10px;
+  width: 100px;
+  border-radius: 10px;
+}
+.selectfile {
+  border: 1px rgb(209, 208, 208) solid;
+  padding: 15px;
+  border-radius: 5px;
+}
