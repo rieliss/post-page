@@ -37,7 +37,8 @@ function Setting() {
 
   const navigate = useNavigate();
 
-  const handleCloseChangePasswordModal = () => setShowChangePasswordModal(false);
+  const handleCloseChangePasswordModal = () =>
+    setShowChangePasswordModal(false);
   const handleShowChangePasswordModal = () => setShowChangePasswordModal(true);
 
   const handleCloseDeleteAccountModal = () => setShowDeleteAccountModal(false);
@@ -59,7 +60,11 @@ function Setting() {
   };
 
   const handleDeleteAccount = async () => {
-    if (window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีผู้ใช้ของคุณและข้อมูลบัญชีของคุณ?")) {
+    if (
+      window.confirm(
+        "คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีผู้ใช้ของคุณและข้อมูลบัญชีของคุณ?"
+      )
+    ) {
       try {
         await deleteUserProfile(user._id);
         alert("ลบบัญชีสำเร็จ");
@@ -85,7 +90,7 @@ function Setting() {
               type="email"
               id="set1-input1"
               className="form-control"
-              value={user.email || ''}
+              value={user.email || ""}
               disabled
             />
           </div>

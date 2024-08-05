@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { fetchUserProfile } from "../api/profile";
 import { FaUserFriends } from "react-icons/fa";
 import { Form } from "react-bootstrap";
-//import Navbar1 from "../Navbar/navbar1";
 import "../misc/edit-profile.css";
 import "../misc/profile.css";
 import Navbar2 from "../Navbar/Navbar1";
@@ -11,43 +11,84 @@ import { Button, Nav, Tab } from "react-bootstrap";
 import { CiSaveDown2 } from "react-icons/ci";
 import { IoMdHeart } from "react-icons/io";
 import { IoDocumentText } from "react-icons/io5";
+import ProfileFeeds from "./profile-feed";
 
-const Profile: React.FC = () => {
+const Profile = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [tel, setTel] = useState("");
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [gender, setGender] = useState("");
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [checkUser, setCheckUser] = useState<boolean>(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (id) {
           const profileData = await fetchUserProfile(id);
-          setUsername(profileData.username);
+          console.log("profileData", profileData);
           setUserProfile(profileData);
-          setEmail(profileData.email);
-          setTel(profileData.tel);
-          setFirstname(profileData.firstname);
-          setLastname(profileData.lastname);
-          setDateOfBirth(profileData.date_of_birth);
-          setGender(profileData.gender);
+          setCheckUser(localStorage.getItem("userId") === id);
+          setIsFollowing(
+            profileData.followers.includes(localStorage.getItem("userId"))
+          );
         }
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
     };
-
     fetchData();
   }, [id]);
 
-  const handleEdit = async () => {
-    window.location.href = `/profile/edit-profile/${id}`;
+  const handleFollow = useCallback(async () => {
+    const API_BASE_URL = "http://localhost:3001/follow";
+    try {
+      const response = await fetch(API_BASE_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ me: localStorage.getItem("userId"), you: id }),
+      });
+      if (!response.ok) {
+        const statusText = response.statusText || "Unknown Error";
+        throw new Error(
+          `Server returned ${response.status} ${statusText} for ${API_BASE_URL}`
+        );
+      }
+      const followerData = await response.json();
+      setIsFollowing(followerData.if_followed);
+      navigate(`/profile/${id}`);
+    } catch (error) {
+      console.error("Error:", (error as Error).message);
+    }
+  }, [id]);
+
+  const handleUnfollow = useCallback(async () => {
+    const API_BASE_URL_DELETE = "http://localhost:3001/follow/delete";
+    try {
+      const response = await fetch(API_BASE_URL_DELETE, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ me: localStorage.getItem("userId"), you: id }),
+      });
+      if (!response.ok) {
+        const statusText = response.statusText || "Unknown Error";
+        throw new Error(
+          `Server returned ${response.status} ${statusText} for ${API_BASE_URL_DELETE}`
+        );
+      }
+      await response.json(); // No need to set state from this response
+      setIsFollowing(false); // Update state to reflect unfollowing
+      navigate(`/profile/${id}`);
+    } catch (error) {
+      console.error("Error:", (error as Error).message);
+    }
+  }, [id]);
+
+  const handleEdit = () => {
+    navigate(`/profile/edit-profile/${id}`);
   };
 
   return (
@@ -58,7 +99,7 @@ const Profile: React.FC = () => {
           <div className="coverpic">
             <img
               className="d-block w-100"
-              src={userProfile && userProfile.cover_pic}
+              src={userProfile?.cover_pic || ""}
               alt="Cover"
               style={{
                 height: "60vh",
@@ -85,7 +126,7 @@ const Profile: React.FC = () => {
             >
               <img
                 className="d-block w-100"
-                src={userProfile && userProfile.profile_picture}
+                src={userProfile?.profile_picture || ""}
                 alt="Profile"
                 style={{
                   objectFit: "cover",
@@ -120,7 +161,7 @@ const Profile: React.FC = () => {
         {userProfile && (
           <div className="follow-icon">
             <FaUserFriends />
-            <h5 className="m-0">{userProfile.following.length} following</h5>
+            <h5 className="m-0">{`${userProfile.following.length} following`}</h5>
           </div>
         )}
 
@@ -129,24 +170,39 @@ const Profile: React.FC = () => {
         {userProfile && (
           <div className="follow-icon">
             <FaUserFriends />
-            <h5 className="m-0">{userProfile.followers.length} followers</h5>
+            <h5 className="m-0">
+              {`${userProfile.followers.length} followers`}
+            </h5>
           </div>
         )}
       </div>
-
-      <div className="edit d-flex justify-content-center my-4">
-        <Button
-          variant="dark"
-          style={{ marginRight: "10px" }}
-          onClick={handleEdit}
-        >
-          แก้ไขโปรไฟล์
-        </Button>
-        <Button variant="dark" style={{ marginRight: "10px" }}>
-          แชร์โปรไฟล์
-        </Button>
-      </div>
-
+      {checkUser ? (
+        <div className="edit d-flex justify-content-center my-4">
+          <Button
+            variant="dark"
+            style={{ marginRight: "10px" }}
+            onClick={handleEdit}
+          >
+            แก้ไขโปรไฟล์
+          </Button>
+          <Button variant="dark" style={{ marginRight: "10px" }}>
+            แชร์โปรไฟล์
+          </Button>
+        </div>
+      ) : (
+        <div className="edit d-flex justify-content-center my-4">
+          <Button
+            variant="dark"
+            style={{ marginRight: "10px" }}
+            onClick={isFollowing ? handleUnfollow : handleFollow}
+          >
+            {isFollowing ? "Unfollow" : "Follow"}
+          </Button>
+          <Button variant="dark" style={{ marginRight: "10px" }}>
+            ข้อความ
+          </Button>
+        </div>
+      )}
       <Tab.Container id="myTab" defaultActiveKey="home-tab">
         <Nav variant="underline" className="justify-content-center">
           <Nav.Item>
@@ -168,6 +224,9 @@ const Profile: React.FC = () => {
             </Nav.Link>
           </Nav.Item>
         </Nav>
+        <div>
+          <ProfileFeeds />
+        </div>
         <Tab.Content>
           <Tab.Pane eventKey="home-tab">Home content</Tab.Pane>
           <Tab.Pane eventKey="profile-tab">Profile content</Tab.Pane>

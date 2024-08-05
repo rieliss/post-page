@@ -38,13 +38,14 @@ const AdminRegister = require("./routes/adminRegister");
 const postRouter = require("./routes/post");
 const AdminProfile = require("./routes/adminProfile");
 const ForgotPassword = require("./routes/forgotPassword");
+const FollowUser = require("./routes/follow");
 
 app.use("/register", registerRouter);
 app.use("/login", loginRouter);
 app.use("/profile", profileRouter);
 app.use("/posts", postRouter);
 app.use("/forgot-password", ForgotPassword);
-
+app.use("/follow", FollowUser);
 app.use("/admin", AdminProfile);
 app.use("/admin/register", AdminRegister);
 

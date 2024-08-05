@@ -10,7 +10,8 @@
 }
 .blog {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, auto));
+  /* grid-template-columns: repeat(auto-fit, minmax(33.33%, auto)); */
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 .row {
@@ -49,7 +50,7 @@
   color: #151515;
   font-size: 14px;
 }
-.heart-icon svg{
+.heart-icon svg {
   right: 15px;
   font-size: 20px;
 }
@@ -60,4 +61,3 @@
 .heart-icon svg:hover {
   color: #ee1c47;
 }
-

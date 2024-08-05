@@ -62,7 +62,9 @@ const Content = () => {
           <div className="post-container">
             <div className="head-user">
               <div className="user-info" style={{ fontWeight: "bold" }}>
-                {post.user.firstname} {post.user.lastname}
+                <a href={`/profile/${post.user._id}`}>
+                  {post.user.firstname} {post.user.lastname}
+                </a>
               </div>
               <div className="datePost">
                 {dayjs(post.createdAt).format("DD/MM/YYYY HH:mm:ss")}
@@ -154,7 +156,7 @@ const Content = () => {
                     <div key={comment._id} className="comment mt-2 border p-2">
                       <div className="mt-2">
                         <span>
-                          <a href="/profile:id">
+                          <a href={`/profile/${comment.author._id}`}>
                             {comment.author.firstname} {comment.author.lastname}
                           </a>
                         </span>

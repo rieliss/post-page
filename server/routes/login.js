@@ -1,8 +1,8 @@
 const express = require("express");
 const User = require("../models/user");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { id } = require("date-fns/locale");
 
 router.post("/", async (req, res) => {
@@ -21,11 +21,13 @@ router.post("/", async (req, res) => {
   try {
     if (action === "login") {
       const user = await User.findOne({ email });
-      if(user) {
+      if (user) {
         const isMatch = await bcrypt.compare(password, user.password);
 
-        if(isMatch) {
-          const token = jwt.sign({email: user.email}, "jwt-secret-ket", {expiresIn: "1d"})
+        if (isMatch) {
+          const token = jwt.sign({ email: user.email }, "jwt-secret-ket", {
+            expiresIn: "1d",
+          });
           res.cookie("token", token);
           res.json({
             success: true,
@@ -45,7 +47,9 @@ router.post("/", async (req, res) => {
         });
       }
     } else if (action === "register") {
-      const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+      const existingUser = await User.findOne({
+        $or: [{ username }, { email }],
+      });
 
       if (existingUser) {
         return res.json({

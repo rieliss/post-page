@@ -24,7 +24,8 @@ const Login: React.FC = () => {
   useEffect(() => {
     const toggleBtns = document.querySelectorAll<HTMLAnchorElement>(".toggle");
     const mainElement = document.querySelector<HTMLElement>("main");
-    const bulletElements = document.querySelectorAll<HTMLElement>(".bullets span");
+    const bulletElements =
+      document.querySelectorAll<HTMLElement>(".bullets span");
 
     const handleFocus = (inp: HTMLInputElement) => {
       inp.classList.add("active");
@@ -42,7 +43,9 @@ const Login: React.FC = () => {
 
     const moveSlider = (event: Event) => {
       const index = (event.currentTarget as HTMLElement).dataset.value;
-      const currentImage = document.querySelector<HTMLImageElement>(`.img-${index}`);
+      const currentImage = document.querySelector<HTMLImageElement>(
+        `.img-${index}`
+      );
       const textSlider = document.querySelector<HTMLElement>(".text-group");
 
       if (currentImage && textSlider) {
@@ -53,13 +56,19 @@ const Login: React.FC = () => {
         allImages.forEach((img) => img.classList.remove("show"));
 
         currentImage.classList.add("show");
-        textSlider.style.transform = `translateY(${-(parseInt(index || "1", 10) - 1) * 2.2}rem)`;
+        textSlider.style.transform = `translateY(${
+          -(parseInt(index || "1", 10) - 1) * 2.2
+        }rem)`;
       }
     };
 
-    toggleBtns.forEach((btn) => btn.addEventListener("click", handleToggleClick));
-    bulletElements.forEach((bullet) => bullet.addEventListener("click", moveSlider));
-    
+    toggleBtns.forEach((btn) =>
+      btn.addEventListener("click", handleToggleClick)
+    );
+    bulletElements.forEach((bullet) =>
+      bullet.addEventListener("click", moveSlider)
+    );
+
     const inputs = document.querySelectorAll<HTMLInputElement>(".input-field");
     inputs.forEach((inp) => {
       inp.addEventListener("focus", () => handleFocus(inp));
@@ -67,8 +76,12 @@ const Login: React.FC = () => {
     });
 
     return () => {
-      toggleBtns.forEach((btn) => btn.removeEventListener("click", handleToggleClick));
-      bulletElements.forEach((bullet) => bullet.removeEventListener("click", moveSlider));
+      toggleBtns.forEach((btn) =>
+        btn.removeEventListener("click", handleToggleClick)
+      );
+      bulletElements.forEach((bullet) =>
+        bullet.removeEventListener("click", moveSlider)
+      );
       inputs.forEach((inp) => {
         inp.removeEventListener("focus", () => handleFocus(inp));
         inp.removeEventListener("blur", () => handleBlur(inp));
@@ -94,7 +107,7 @@ const Login: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({ action: "login", email, password }),
       });
 
@@ -107,7 +120,7 @@ const Login: React.FC = () => {
 
       const contentType = response.headers.get("content-type");
       let responseData;
-      
+
       if (!contentType || !contentType.includes("application/json")) {
         responseData = await response.text();
       } else {
@@ -140,10 +153,9 @@ const Login: React.FC = () => {
     }
   }, [email, password, displayAlert]);
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     try {
       const user = {
         action: "register",
@@ -156,18 +168,18 @@ const Login: React.FC = () => {
         gender,
         date_of_birth,
       };
-  
+
       const response = await fetch("http://localhost:3001/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(user),
       });
-  
+
       const responseData = await response.json();
-  
+
       if (responseData.success) {
         displayAlert("ลงทะเบียนสำเร็จ!");
         // Optionally handle redirect or additional actions after successful registration
@@ -179,8 +191,6 @@ const Login: React.FC = () => {
       displayAlert("ลงทะเบียนไม่สำเร็จ");
     }
   };
-  
-
 
   return (
     <div className="login-container">
@@ -235,7 +245,8 @@ const Login: React.FC = () => {
                   />
 
                   <p className="text">
-                    <Link to= "/forgot-password">ลืมรหัสผ่าน</Link> ในการเข้าสู่ระบบ
+                    <Link to="/forgot-password">ลืมรหัสผ่าน</Link>{" "}
+                    ในการเข้าสู่ระบบ
                   </p>
                 </div>
               </form>
@@ -322,11 +333,7 @@ const Login: React.FC = () => {
 
             <div className="carousell">
               <div className="images-wrapper">
-                <img
-                  src="../"
-                  className="image img-1 show"
-                  alt=""
-                />
+                <img src="../" className="image img-1 show" alt="" />
                 <img src="./img/image2.png" className="image img-2" alt="" />
                 <img src="./img/image3.png" className="image img-3" alt="" />
               </div>
