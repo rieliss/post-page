@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile } from "../api/profile";
@@ -7,25 +7,26 @@ import { Form } from "react-bootstrap";
 import "../misc/edit-profile.css";
 import "../misc/profile.css";
 import Navbar2 from "../Navbar/Navbar1";
-import { Button, Nav, Tab } from "react-bootstrap";
+import { Button, Nav, Tab, Modal } from "react-bootstrap";
 import { CiSaveDown2 } from "react-icons/ci";
 import { IoMdHeart } from "react-icons/io";
 import { IoDocumentText } from "react-icons/io5";
 import ProfileFeeds from "./profile-feed";
+import { FollowerModal } from "./follower-modal";
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [checkUser, setCheckUser] = useState<boolean>(false);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [checkUser, setCheckUser] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (id) {
+          const me = localStorage.getItem("userId");
           const profileData = await fetchUserProfile(id);
-          console.log("profileData", profileData);
           setUserProfile(profileData);
           setCheckUser(localStorage.getItem("userId") === id);
           setIsFollowing(
@@ -56,12 +57,12 @@ const Profile = () => {
         );
       }
       const followerData = await response.json();
-      setIsFollowing(followerData.if_followed);
-      navigate(`/profile/${id}`);
+      setUserProfile(followerData.newFollow);
+      setIsFollowing(followerData.newFollow.if_followed);
     } catch (error) {
       console.error("Error:", (error as Error).message);
     }
-  }, [id]);
+  }, [id, isFollowing]);
 
   const handleUnfollow = useCallback(async () => {
     const API_BASE_URL_DELETE = "http://localhost:3001/follow/delete";
@@ -79,13 +80,13 @@ const Profile = () => {
           `Server returned ${response.status} ${statusText} for ${API_BASE_URL_DELETE}`
         );
       }
-      await response.json(); // No need to set state from this response
-      setIsFollowing(false); // Update state to reflect unfollowing
-      navigate(`/profile/${id}`);
+      const res = await response.json();
+      setUserProfile(res.unFollow);
+      setIsFollowing(false);
     } catch (error) {
       console.error("Error:", (error as Error).message);
     }
-  }, [id]);
+  }, [id, isFollowing]);
 
   const handleEdit = () => {
     navigate(`/profile/edit-profile/${id}`);
@@ -161,7 +162,7 @@ const Profile = () => {
         {userProfile && (
           <div className="follow-icon">
             <FaUserFriends />
-            <h5 className="m-0">{`${userProfile.following.length} following`}</h5>
+            <FollowerModal userProfile={userProfile} />
           </div>
         )}
 
@@ -170,9 +171,7 @@ const Profile = () => {
         {userProfile && (
           <div className="follow-icon">
             <FaUserFriends />
-            <h5 className="m-0">
-              {`${userProfile.followers.length} followers`}
-            </h5>
+            <FollowerModal userProfile={userProfile} />
           </div>
         )}
       </div>

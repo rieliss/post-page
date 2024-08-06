@@ -19,8 +19,6 @@ app.use(
 );
 app.use(express.json());
 
-// mongodb+srv://khessarin:<password>@cluster0.5vl7fiz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-
 // const mongoURL = "mongodb://localhost:27017/blogging";
 const mongoURL = "mongodb+srv://khessarin:1234@cluster0.5vl7fiz.mongodb.net/";
 mongoose.connect(mongoURL);

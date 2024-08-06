@@ -162,10 +162,7 @@ const EditProfile: React.FC = () => {
                 style={{ display: "none" }}
               />
               <div className="input-group-append">
-                <label
-                  htmlFor="cover_pic"
-                  className="input-group-text1"
-                >
+                <label htmlFor="cover_pic" className="input-group-text1">
                   <IoCamera />
                 </label>
               </div>
@@ -205,10 +202,7 @@ const EditProfile: React.FC = () => {
                 style={{ display: "none" }}
               />
               <div className="input-group-append1">
-                <label
-                  htmlFor="profile_picture"
-                  className="input-group-text2"
-                >
+                <label htmlFor="profile_picture" className="input-group-text2">
                   <IoCamera />
                 </label>
               </div>
