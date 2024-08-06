@@ -87,12 +87,20 @@ export function FollowingModal({ userProfile }: any) {
       }
       const res = await response.json();
       setIsFollowingModal(false);
+      // Refetch or update myUser state here if needed
       const updatedProfile = await fetchProfile(localStorage.getItem("userId"));
       setMyUser(updatedProfile);
     } catch (error) {
       console.error("Error:", (error as Error).message);
     }
   }, []);
+
+  //   useEffect(() => {
+  //     console.log("userProfile", userProfile);
+  //     console.log("currentUser", currentUser);
+  //     console.log("CheckFollowing", CheckFollowing);
+  //     console.log("myUser", myUser);
+  //   }, [currentUser, userProfile, CheckFollowing, myUser]);
 
   return (
     <>
@@ -122,9 +130,15 @@ export function FollowingModal({ userProfile }: any) {
               }}
             >
               <div className="d-flex justify-content-center">
-                <p style={{ padding: "0 10px 0 10px" }}>{c.firstname}</p>
+                <a href={`/profile/${c._id}`}>
+                  <p style={{ padding: "0 10px 0 10px" }}>{c.firstname}</p>
+                </a>
               </div>
-              {CheckFollowing?.some((follower: any) => follower === c._id) ? (
+              {localStorage.getItem("userId") === c._id ? (
+                <Button disabled>you</Button>
+              ) : CheckFollowing?.some(
+                  (follower: any) => follower === c._id
+                ) ? (
                 <Button onClick={() => handleUnfollow(c)}>followed</Button>
               ) : (
                 <Button onClick={() => handleFollow(c)}>follow</Button>

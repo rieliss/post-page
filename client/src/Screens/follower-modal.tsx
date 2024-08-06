@@ -1,12 +1,11 @@
-import { useState, useMemo, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { fetchFollow, fetchProfile } from "../api/follow";
 import { Button, Modal } from "react-bootstrap";
-import { fetchProfile, fetchFollow } from "../api/follow";
 
 export function FollowerModal({ userProfile }: any) {
   const [smShow, setSmShow] = useState(false);
   const [myUser, setMyUser] = useState<any>(null);
-  const [isFollowingModal, setIsFollowingModal] = useState<boolean>(false);
-  const [profileDataArray, setProfileDataArray] = useState<any[]>([]);
+  const [isFollowerModal, setIsFollowerModal] = useState<boolean>(false);
 
   const [currentUser, setCurrentUser] = useState<any>([]);
 
@@ -25,9 +24,9 @@ export function FollowerModal({ userProfile }: any) {
     }
   };
 
-  const CheckFollowing = useMemo(() => {
+  const CheckFollower = useMemo(() => {
     const newData: string[] = [];
-    userProfile?.following?.forEach((e: any) => {
+    userProfile?.followers?.forEach((e: any) => {
       const isFollowing = myUser?.following?.some(
         (follower: any) => follower === e
       );
@@ -36,7 +35,7 @@ export function FollowerModal({ userProfile }: any) {
       }
     });
     return newData;
-  }, [userProfile, myUser, isFollowingModal]);
+  }, [userProfile, myUser, isFollowerModal]);
 
   const handleFollow = useCallback(async (you: string) => {
     const API_BASE_URL = "http://localhost:3001/follow";
@@ -58,7 +57,7 @@ export function FollowerModal({ userProfile }: any) {
         );
       }
       const followerData = await response.json();
-      setIsFollowingModal(followerData.newFollow.if_followed);
+      setIsFollowerModal(followerData.newFollow.if_followed);
       const updatedProfile = await fetchProfile(localStorage.getItem("userId"));
       setMyUser(updatedProfile);
     } catch (error) {
@@ -86,13 +85,20 @@ export function FollowerModal({ userProfile }: any) {
         );
       }
       const res = await response.json();
-      setIsFollowingModal(false);
+      setIsFollowerModal(false);
       const updatedProfile = await fetchProfile(localStorage.getItem("userId"));
       setMyUser(updatedProfile);
     } catch (error) {
       console.error("Error:", (error as Error).message);
     }
   }, []);
+
+  useEffect(() => {
+    console.log("userProfile", userProfile);
+    console.log("currentUser", currentUser);
+    console.log("CheckFollower", CheckFollower);
+    console.log("myUser", myUser);
+  }, [currentUser, userProfile, CheckFollower, myUser]);
 
   return (
     <>
@@ -122,9 +128,13 @@ export function FollowerModal({ userProfile }: any) {
               }}
             >
               <div className="d-flex justify-content-center">
-                <p style={{ padding: "0 10px 0 10px" }}>{c.firstname}</p>
+                <a href={`/profile/${c._id}`}>
+                  <p style={{ padding: "0 10px 0 10px" }}>{c.firstname}</p>
+                </a>
               </div>
-              {CheckFollowing?.some((follower: any) => follower === c._id) ? (
+              {localStorage.getItem("userId") === c._id ? (
+                <Button disabled>you</Button>
+              ) : CheckFollower?.some((follower: any) => follower === c._id) ? (
                 <Button onClick={() => handleUnfollow(c)}>followed</Button>
               ) : (
                 <Button onClick={() => handleFollow(c)}>follow</Button>
