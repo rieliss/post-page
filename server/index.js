@@ -20,7 +20,8 @@ app.use(
 app.use(express.json());
 
 // const mongoURL = "mongodb://localhost:27017/blogging";
-const mongoURL = "mongodb+srv://khessarin:1234@cluster0.5vl7fiz.mongodb.net/";
+const mongoURL =
+  "mongodb+srv://khessarin:4zY0GVP699nSH0zf@admin.uf1d0.mongodb.net/";
 mongoose.connect(mongoURL);
 
 const connection = mongoose.connection;

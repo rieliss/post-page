@@ -3,7 +3,6 @@ import "../misc/home.css";
 import Navbar2 from "../Navbar/Navbar1";
 import Feeds from "./Feeds";
 import "../misc/home.css";
-import bgright from "../pic/bg1.png";
 import { IoIosArrowRoundForward, IoIosArrowRoundDown } from "react-icons/io";
 import Footer from "../Navbar/footer";
 
@@ -24,16 +23,13 @@ function HomePage() {
             <IoIosArrowRoundForward />
           </a>
         </div>
-
         <div className="down-arrow">
           <a href="#trending" className="down">
             <IoIosArrowRoundDown />
           </a>
         </div>
       </section>
-
       <Feeds />
-
       <Footer />
     </div>
   );

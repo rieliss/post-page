@@ -1,18 +1,22 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-require('../models/user');
-require('../models/post');
+require("../models/user");
+require("../models/post");
 
 const LikeSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
   },
   post: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post',
+    ref: "Post",
     required: true,
+  },
+  read: {
+    type: Boolean,
+    default: 1,
   },
   created_at: {
     type: Date,
@@ -20,6 +24,6 @@ const LikeSchema = new mongoose.Schema({
   },
 });
 
-const Like = mongoose.model('Like', LikeSchema);
+const Like = mongoose.model("Like", LikeSchema);
 
 module.exports = Like;

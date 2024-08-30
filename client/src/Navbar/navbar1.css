@@ -129,30 +129,53 @@ input {
   right: 0;
   background-color: black;
   border: 1px solid #ccc;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1000; /* Ensure it appears above other elements */
   display: none; /* Initially hide the menu */
 }
-.dropdown-item1{
+.dropdown-item1 {
   position: absolute;
   background-color: #fff;
   box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
   right: 6%;
   border-radius: 15px;
 }
-.dropdown-item1 a{
-    color: #2c2c2c;
-    text-decoration: none;
-    font-size: 16px;
-    text-transform: capitalize;
-    padding-right: 2rem;
-    font-weight: 400;
-    transition: all 0.42s ease;
+.dropdown-item1 a {
+  color: #2c2c2c;
+  text-decoration: none;
+  font-size: 16px;
+  text-transform: capitalize;
+  padding-right: 2rem;
+  font-weight: 400;
+  transition: all 0.42s ease;
 }
-.dropdown-item1 li{
+.dropdown-item1 li {
   padding-top: 1rem;
 }
-.dropdown-item1 > ul > li > svg{
+.dropdown-item1 > ul > li > svg {
+  font-size: 20px;
+}
+
+.dropdown-itemnoti {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.1);
+  right: 6%;
+  border-radius: 15px;
+}
+.dropdown-itemnoti a {
+  color: #2c2c2c;
+  text-decoration: none;
+  font-size: 16px;
+  text-transform: capitalize;
+  padding-right: 2rem;
+  font-weight: 400;
+  transition: all 0.42s ease;
+}
+.dropdown-itemnoti li {
+  padding-top: 1rem;
+}
+.dropdown-itemnoti > ul > li > svg {
   font-size: 20px;
 }
 

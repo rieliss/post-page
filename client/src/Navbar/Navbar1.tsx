@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../Navbar/navbar1.css";
 import logoKKU from "../pic/logo-head.jpg";
-import { IoIosSearch } from "react-icons/io";
 import { PiUserCircleFill } from "react-icons/pi";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaUserAlt } from "react-icons/fa";
@@ -11,10 +10,14 @@ import {
   IoMdSettings,
   IoIosStats,
   IoIosHelpCircleOutline,
+  IoIosHeartEmpty,
+  IoIosSearch,
 } from "react-icons/io";
-import { IoLogOutOutline } from "react-icons/io5";
-import { IoIosHeartEmpty } from "react-icons/io";
-import { IoBookmarkOutline } from "react-icons/io5";
+import {
+  IoBookmarkOutline,
+  IoLogOutOutline,
+  IoNotificationsOutline,
+} from "react-icons/io5";
 import { getPosts, likePost } from "../api/post";
 import { Post } from "../types/post";
 
@@ -41,6 +44,7 @@ const Navbar1 = () => {
   const [feeds, setFeeds] = useState<Post[] | null>(null);
   const [userId, setUserId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isNotiOpen, setIsNotiOpen] = useState(false);
   const [loading, setLoading] = useState(false); // สำหรับแสดงสถานะการค้นหา
   const navigate = useNavigate();
 
@@ -81,10 +85,6 @@ const Navbar1 = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
 
   const handleClick = () => {
     if (!showDropdown) {
@@ -147,6 +147,10 @@ const Navbar1 = () => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const toggleNotiMenu = () => {
+    setIsNotiOpen(!isNotiOpen);
   };
 
   const handleClickCard = (id: string) => {
@@ -213,6 +217,32 @@ const Navbar1 = () => {
               className={`uil uil-${showDropdown ? "multiply" : "search"}`}
             />
           </div>
+          <div className="">
+            <IoNotificationsOutline onClick={toggleNotiMenu} />
+            {isNotiOpen && (
+              <div className="dropdown-itemnoti">
+                <p>noti</p>
+                <ul>
+                  <li>
+                    <FaUserAlt />
+                    <Link to={`/profile/${userId}`}>โปรไฟล์</Link>
+                  </li>
+                  <li>
+                    <IoMdSettings />
+                    <a href={`/profile/edit-profile/${userId}`}>ตั้งค่า</a>
+                  </li>
+                  <li>
+                    <IoIosStats />
+                    <a href="#">สถิติ</a>
+                  </li>
+                  <li>
+                    <IoIosHelpCircleOutline />
+                    <a href="#">ช่วยเหลือ</a>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
           <div className={`items ${showDropdown ? "open" : ""}`}>
             {filteredCate.length > 0 &&
               filteredCate.map((cate) => (
@@ -232,7 +262,7 @@ const Navbar1 = () => {
                   </li>
                   <li>
                     <IoMdSettings />
-                    <a href="#">ตั้งค่า</a>
+                    <a href={`/profile/edit-profile/${userId}`}>ตั้งค่า</a>
                   </li>
                   <li>
                     <IoIosStats />
@@ -252,7 +282,6 @@ const Navbar1 = () => {
               </div>
             )}
           </div>
-
           <div className="bx bx-menu" id="menu-icon">
             <RxHamburgerMenu />
           </div>
@@ -286,7 +315,6 @@ const Navbar1 = () => {
                     key={idx}
                     onClick={() => handleClickCard(item._id)}
                   >
-                    {/* <Link to={`/content/${item._id}`}>{item.title || item.topic}</Link> */}
                     <img src={item.image} alt="" />
                     <div className="heart-icon">
                       <IoIosHeartEmpty
