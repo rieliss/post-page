@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import logostart from "../../pic/logo-headV2.png";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { TiDocumentText } from "react-icons/ti";
-import {  RiDashboardFill } from "react-icons/ri";
+import { RiDashboardFill } from "react-icons/ri";
 import { IoIosHelpCircle, IoIosTime } from "react-icons/io";
 import { MdManageAccounts, MdCategory, MdOutlinePostAdd } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
@@ -258,7 +258,7 @@ const AdminHome: React.FC = () => {
               </div>
 
               <div
-                className="noti-icon"
+                className="-icon"
                 style={{ width: "4.4rem", position: "absolute", right: "18%" }}
               >
                 <IoNotifications style={{ fontSize: "1.2rem" }} />

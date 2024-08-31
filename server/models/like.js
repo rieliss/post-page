@@ -14,10 +14,6 @@ const LikeSchema = new mongoose.Schema({
     ref: "Post",
     required: true,
   },
-  read: {
-    type: Boolean,
-    default: 1,
-  },
   created_at: {
     type: Date,
     default: Date.now,

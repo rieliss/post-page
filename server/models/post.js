@@ -1,15 +1,15 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-require('../models/user');
-require('../models/comment');
-require('../models/like');
+require("../models/user");
+require("../models/comment");
+require("../models/like");
 
 // กำหนดโครงสร้างข้อมูลสำหรับโพสต์บล็อก
 const postSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     topic: {
@@ -32,13 +32,13 @@ const postSchema = new mongoose.Schema(
     comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment',
+        ref: "Comment",
       },
     ],
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Like',
+        ref: "Like",
       },
     ],
   },
@@ -46,6 +46,6 @@ const postSchema = new mongoose.Schema(
 ); // เพิ่ม timestamps เพื่อบันทึกวันที่สร้างและแก้ไข
 
 // สร้างโมเดลโพสต์บล็อกจาก schema ที่กำหนด
-const Post = mongoose.model('Post', postSchema);
+const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;

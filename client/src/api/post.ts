@@ -1,10 +1,24 @@
+import axios from "axios";
 import { Post } from "../types/post";
 
 const API_BASE_URL = "http://localhost:3001";
 
+const createNotification = async (notificationData: any) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/notifications`,
+      notificationData
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      `Server returned ${error.response.status} ${error.response.statusText} for ${error.config.url}`
+    );
+  }
+};
+
 const createPost = async (post: any): Promise<any> => {
   const url = `${API_BASE_URL}/posts`;
-
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -13,13 +27,11 @@ const createPost = async (post: any): Promise<any> => {
       },
       body: JSON.stringify(post),
     });
-
     if (!response.ok) {
       throw new Error(
         `Server returned ${response.status} ${response.statusText} for ${url}`
       );
     }
-
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
       const responseData = await response.json();
@@ -38,7 +50,6 @@ const createPost = async (post: any): Promise<any> => {
 
 const editPost = async (id: string, post: any): Promise<any> => {
   const url = `${API_BASE_URL}/posts/${id}`;
-
   try {
     const response = await fetch(url, {
       method: "PUT",
@@ -47,19 +58,16 @@ const editPost = async (id: string, post: any): Promise<any> => {
       },
       body: JSON.stringify(post),
     });
-
     if (!response.ok) {
       throw new Error(
         `Server returned ${response.status} ${response.statusText} for ${url}`
       );
     }
-
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       const responseData = await response.text();
       return responseData;
     }
-
     const responseData = await response.json();
     return responseData;
   } catch (error: any) {
@@ -70,26 +78,30 @@ const editPost = async (id: string, post: any): Promise<any> => {
 
 const addComment = async (id: string, content: string): Promise<void> => {
   const url = `${API_BASE_URL}/posts/${id}/comment`;
-
-  const userId = localStorage.getItem("userId"); // ดึงค่า userId เป็นสตริง
-
+  const userId = localStorage.getItem("userId");
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        author: userId,
-        content,
-      }),
+      body: JSON.stringify({ author: userId, content }),
     });
-
     if (!response.ok) {
       throw new Error(
         `Server returned ${response.status} ${response.statusText}`
       );
     }
+    const comment = await response.json();
+
+    // Create notification
+    await createNotification({
+      user: comment.post.user, // Assuming the post owner is available in the comment
+      type: "comment",
+      message: `${userId} commented on your post.`,
+      entity: comment._id,
+      entityModel: "Comment",
+    });
   } catch (error: any) {
     console.error("Error:", error.message);
     throw error;
@@ -98,25 +110,30 @@ const addComment = async (id: string, content: string): Promise<void> => {
 
 const likePost = async (id: string): Promise<void> => {
   const url = `${API_BASE_URL}/posts/${id}/likes`;
-
-  const userId = localStorage.getItem("userId"); // ดึงค่า userId เป็นสตริง
-
+  const userId = localStorage.getItem("userId");
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        userId,
-      }),
+      body: JSON.stringify({ userId }),
     });
-
     if (!response.ok) {
       throw new Error(
         `Server returned ${response.status} ${response.statusText}`
       );
     }
+    const like = await response.json();
+
+    // Create notification
+    await createNotification({
+      user: like.post.user, // Assuming the post owner is available in the like
+      type: "like",
+      message: `${userId} liked your post.`,
+      entity: like._id,
+      entityModel: "Like",
+    });
   } catch (error: any) {
     console.error("Error:", error.message);
     throw error;
@@ -125,7 +142,6 @@ const likePost = async (id: string): Promise<void> => {
 
 const getPosts = async (): Promise<Post[]> => {
   const url = `${API_BASE_URL}/posts`;
-
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -133,7 +149,6 @@ const getPosts = async (): Promise<Post[]> => {
         "Content-Type": "application/json",
       },
     });
-
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
       const data = await response.json();
@@ -152,7 +167,6 @@ const getPosts = async (): Promise<Post[]> => {
 
 const getPostById = async (id: string): Promise<Post> => {
   const url = `${API_BASE_URL}/posts/${id}`;
-
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -160,7 +174,6 @@ const getPostById = async (id: string): Promise<Post> => {
         "Content-Type": "application/json",
       },
     });
-
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
       const data = await response.json();
@@ -179,7 +192,6 @@ const getPostById = async (id: string): Promise<Post> => {
 
 const deletePostById = async (id: string): Promise<Post> => {
   const url = `${API_BASE_URL}/posts/${id}`;
-
   try {
     const response = await fetch(url, {
       method: "DELETE",
@@ -187,7 +199,6 @@ const deletePostById = async (id: string): Promise<Post> => {
         "Content-Type": "application/json",
       },
     });
-
     const data = await response.json();
     return data;
   } catch (error: any) {
