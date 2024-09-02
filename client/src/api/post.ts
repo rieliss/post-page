@@ -90,7 +90,7 @@ const addComment = async (id: string, content: string): Promise<void> => {
 
     // Create notification
     await createNotification({
-      user: post.user._id, // Ensure this is the correct field
+      user: post.user._id,
       type: "comment",
       message: `${userId} commented on your post.`,
       entity: comment._id,
@@ -136,7 +136,7 @@ const createNotification = async (notificationData: {
 }) => {
   const url = `${API_BASE_URL}/notifications`;
   try {
-    console.log("Sending notification data:", notificationData); // Debugging line
+    console.log("Sending notification data:", notificationData);
     const response = await axios.post(url, notificationData);
 
     if (response.status !== 200) {

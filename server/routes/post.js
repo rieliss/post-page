@@ -209,7 +209,7 @@ router.post("/:id/comment", async (req, res) => {
 
     // Create notification
     const notification = new Notification({
-      user: post.user._id, // The owner of the post
+      user: post.user._id,
       type: "comment",
       message: `${author} commented on your post.`,
       entity: savedComment._id,
@@ -220,7 +220,7 @@ router.post("/:id/comment", async (req, res) => {
     res.status(201).json({
       message: "Comment created successfully",
       comment: savedComment,
-      post: { user: post.user._id }, // Include user data
+      post: { user: post.user._id },
     });
   } catch (err) {
     res.status(500).json({ message: "Error creating comment: " + err.message });
