@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../models/post");
 const Comment = require("../models/comment");
+const User = require("../models/user");
 const Like = require("../models/like");
-const Notification = require("../models/notification"); // Import Notification model
+const Notification = require("../models/notification");
 
 router.get("/search", async (req, res) => {
   const query = req.query.query;
@@ -89,7 +90,6 @@ router.patch("/:id", getPost, async (req, res) => {
 // Delete blog post
 router.delete("/:id", getPost, async (req, res) => {
   try {
-    // Delete related comments and likes
     await Comment.deleteMany({ post: res.post._id });
     await Like.deleteMany({ post: res.post._id });
 
@@ -127,45 +127,67 @@ async function getPost(req, res, next) {
   next();
 }
 
-// Add or remove like
 router.post("/:id/likes", async (req, res) => {
   const postId = req.params.id;
   const { userId } = req.body;
 
   try {
-    const post = await Post.findById(postId).populate("user");
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+    const post = await Post.findById(postId);
+    const user = await User.findById(userId);
+
+    if (!post || !user) {
+      return res.status(404).json({ message: "Post or User not found" });
     }
 
-    const existingLike = await Like.findOne({ user: userId, post: postId });
+    const existingLike = await Like.findOne({ post: postId, user: userId });
+
     if (existingLike) {
       await Like.deleteOne({ _id: existingLike._id });
-      post.likes.pull(existingLike._id);
+      post.likes = post.likes.filter(
+        (likeId) => !likeId.equals(existingLike._id)
+      );
       await post.save();
-      return res.status(200).json({ message: "Like removed successfully" });
+
+      await Notification.deleteOne({
+        user: post.user,
+        entity: postId,
+        type: "like",
+        entityModel: "Post",
+      });
+
+      res.status(200).json({ message: "Post disliked", post });
+    } else {
+      const like = new Like({ user: userId, post: postId });
+      await like.save();
+
+      post.likes.push(like._id);
+      await post.save();
+
+      const existingNotification = await Notification.findOne({
+        user: post.user,
+        entity: postId,
+        type: "like",
+        entityModel: "Post",
+      });
+
+      if (!existingNotification) {
+        const notification = new Notification({
+          user: post.user,
+          type: "like",
+          message: `${user.firstname} ${user.lastname || ""} liked your post.`,
+          entity: post._id,
+          entityModel: "Post",
+        });
+        await notification.save();
+      }
+
+      res.status(200).json({ message: "Post liked", post, like: like._id });
     }
-
-    const like = new Like({ user: userId, post: postId });
-    const savedLike = await like.save();
-    post.likes.push(savedLike._id);
-    await post.save();
-
-    // Create notification
-    const notification = new Notification({
-      user: post.user._id, // The owner of the post
-      type: "like",
-      message: `${userId} liked your post.`,
-      entity: postId,
-      entityModel: "Post",
-    });
-    await notification.save();
-
+  } catch (error) {
+    console.error("Error liking/disliking post:", error);
     res
-      .status(201)
-      .json({ message: "Like created successfully", like: savedLike });
-  } catch (err) {
-    res.status(500).json({ message: "Error handling like: " + err.message });
+      .status(500)
+      .json({ message: "Error liking/disliking post: " + error.message });
   }
 });
 
@@ -190,16 +212,44 @@ router.post("/:id/comment", async (req, res) => {
       user: post.user._id, // The owner of the post
       type: "comment",
       message: `${author} commented on your post.`,
-      entity: postId,
+      entity: savedComment._id,
       entityModel: "Post",
     });
     await notification.save();
 
-    res
-      .status(201)
-      .json({ message: "Comment created successfully", comment: savedComment });
+    res.status(201).json({
+      message: "Comment created successfully",
+      comment: savedComment,
+      post: { user: post.user._id }, // Include user data
+    });
   } catch (err) {
     res.status(500).json({ message: "Error creating comment: " + err.message });
+  }
+});
+
+// Add this to your routes
+router.post("/notifications", async (req, res) => {
+  const { user, type, message, entity, entityModel } = req.body;
+
+  if (!user || !type || !message || !entity || !entityModel) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const notification = new Notification({
+      user,
+      type,
+      message,
+      entity,
+      entityModel,
+    });
+    const savedNotification = await notification.save();
+    res.status(200).json(savedNotification);
+  } catch (error) {
+    console.error("Error creating notification:", error);
+    res
+      .status(500)
+      .json({ message: "Error creating notification: " + error.message });
   }
 });
 

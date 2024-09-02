@@ -30,7 +30,7 @@ export const fetchUserProfile = async (id: string): Promise<any> => {
     }
 
     const responseData = await response.json();
-    if (responseData.id) {
+    if (responseData._id) {
     } else {
       console.error("Response does not contain ID:", responseData);
     }
@@ -53,7 +53,6 @@ export const updateUserProfile = async (
   userData: any
 ): Promise<any> => {
   const url = `${API_BASE_URL}/profile/edit-profile/update/${id}`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {
@@ -92,7 +91,6 @@ export const deleteUserProfile = async (id: string): Promise<any> => {
   }
 
   const url = `${API_BASE_URL}/profile/edit-profile/delete/${id}`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {

@@ -1,42 +1,21 @@
 const mongoose = require("mongoose");
-require("../models/user");
-require("../models/post");
-require("../models/comment");
+const Schema = mongoose.Schema;
 
-const NotificationSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
+const notificationSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    type: { type: String, required: true },
+    message: { type: String, required: true },
+    entity: { type: mongoose.Schema.Types.ObjectId, refPath: "entityModel" },
+    entityModel: { type: String, required: true },
+    isRead: { type: Boolean, default: false },
   },
-  type: {
-    type: String,
-    enum: ["like", "comment", "follow", "other"],
-    required: true,
-  },
-  message: {
-    type: String,
-    required: true,
-  },
-  entity: {
-    type: mongoose.Schema.Types.ObjectId,
-    refPath: "entityModel",
-    required: true,
-  },
-  entityModel: {
-    type: String,
-    enum: ["Post", "Comment", "User"],
-    required: true,
-  },
-  isRead: {
-    type: Boolean,
-    default: false,
-  },
-  created_at: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
-const Notification = mongoose.model("Notification", NotificationSchema);
-module.exports = Notification;
+notificationSchema.index(
+  { user: 1, entity: 1, type: 1, entityModel: 1 },
+  { unique: true }
+);
+
+module.exports = mongoose.model("Notification", notificationSchema);

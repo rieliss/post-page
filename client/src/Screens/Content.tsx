@@ -48,7 +48,8 @@ const Content = () => {
   const handleLike = async () => {
     try {
       await likePost(id as string);
-      navigate(0);
+      const res = await getPostById(id as string);
+      setPost(res);
     } catch (error) {}
   };
 
@@ -81,29 +82,7 @@ const Content = () => {
                 <div className="topic-con">
                   <h2>{post.topic}</h2>
                 </div>
-                <div className="category-con">
-                  {post.category === "คาเฟ่" && (
-                    <Badge bg="info">{post.category}</Badge>
-                  )}
-                  {post.category === "ร้านอาหาร" && (
-                    <Badge bg="primary">{post.category}</Badge>
-                  )}
-                  {post.category === "ท่องเที่ยว" && (
-                    <Badge bg="warning">{post.category}</Badge>
-                  )}
-                  {post.category === "บิวตี้" && (
-                    <Badge bg="light">{post.category}</Badge>
-                  )}
-                  {post.category === "แฟชั่น" && (
-                    <Badge bg="success">{post.category}</Badge>
-                  )}
-                  {post.category === "ข่าวสาร" && (
-                    <Badge bg="danger">{post.category}</Badge>
-                  )}
-                  {post.category === "อื่นๆ" && (
-                    <Badge bg="secondary">{post.category}</Badge>
-                  )}
-                </div>
+                <div className="category-con">{/* Category badges */}</div>
 
                 <div className="post-con">{post.content}</div>
 
@@ -112,7 +91,7 @@ const Content = () => {
                   <div className="icon-like" onClick={handleLike}>
                     <LuHeart
                       color={
-                        post.likes.find((l) => l.user === userId)
+                        post.likes.some((l) => l.user === userId)
                           ? "red"
                           : "black"
                       }

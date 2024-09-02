@@ -170,7 +170,6 @@ const Navbar1 = () => {
   };
 
   const handleClickCard = (id: string) => {
-    console.log(id);
     navigate(`/content/${id}`);
   };
 
@@ -196,6 +195,43 @@ const Navbar1 = () => {
     setUserId("");
     navigate("/login");
   }, [navigate]);
+
+  const handleNotificationClick = async (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    notificationId: string,
+    entityId: string
+  ) => {
+    e.preventDefault();
+
+    try {
+      await axios.patch(
+        `http://localhost:3001/notifications/${notificationId}/mark-as-read`
+      );
+
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) =>
+          notification._id === notificationId
+            ? { ...notification, isRead: true }
+            : notification
+        )
+      );
+
+      navigate(`/content/${entityId}`);
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error);
+    }
+  };
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/notifications?userId=${userId}`
+      );
+      setNotifications(response.data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
 
   return (
     <div className="navbarreal">
@@ -231,20 +267,46 @@ const Navbar1 = () => {
               className={`uil uil-${showDropdown ? "multiply" : "search"}`}
             />
           </div>
-          <div className="">
+          <div>
             <IoNotificationsOutline onClick={toggleNotiMenu} />
             {isNotiOpen && (
-              <div className="dropdown-itemnoti">
+              <div className="dropdown-itemnoti" style={{ padding: "1rem" }}>
                 <h2>Notifications</h2>
                 <ul>
-                  {notifications.map((notification, idx) => (
-                    <li key={idx}>
-                      {notification.type === "like" &&
-                        `User ${notification.user} liked your post`}
-                      {notification.type === "comment" &&
-                        `User ${notification.user} commented on your post`}
-                    </li>
-                  ))}
+                  {notifications.map((notification, idx) => {
+                    const backgroundColor = notification.isRead
+                      ? "transparent"
+                      : "rgba(232, 232, 232, .8)";
+
+                    return (
+                      <li
+                        key={idx}
+                        style={{
+                          backgroundColor,
+                          borderRadius: "10px",
+                          marginBottom: "0.5rem",
+                          textAlign: "start",
+                          padding: "0.8rem",
+                        }}
+                      >
+                        <a
+                          href={`/content/${notification.entity}`}
+                          onClick={(e) =>
+                            handleNotificationClick(
+                              e,
+                              notification._id,
+                              notification.entity
+                            )
+                          }
+                        >
+                          {notification.type === "like" &&
+                            `${notification.message}`}
+                          {notification.type === "comment" &&
+                            `${notification.message}`}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             )}

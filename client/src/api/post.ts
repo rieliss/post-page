@@ -3,20 +3,6 @@ import { Post } from "../types/post";
 
 const API_BASE_URL = "http://localhost:3001";
 
-const createNotification = async (notificationData: any) => {
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/notifications`,
-      notificationData
-    );
-    return response.data;
-  } catch (error: any) {
-    throw new Error(
-      `Server returned ${error.response.status} ${error.response.statusText} for ${error.config.url}`
-    );
-  }
-};
-
 const createPost = async (post: any): Promise<any> => {
   const url = `${API_BASE_URL}/posts`;
   try {
@@ -79,24 +65,32 @@ const editPost = async (id: string, post: any): Promise<any> => {
 const addComment = async (id: string, content: string): Promise<void> => {
   const url = `${API_BASE_URL}/posts/${id}/comment`;
   const userId = localStorage.getItem("userId");
+
+  if (!userId) {
+    throw new Error("User is not logged in.");
+  }
+
   try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ author: userId, content }),
+    const response = await axios.post(url, {
+      author: userId,
+      content,
     });
-    if (!response.ok) {
+
+    if (response.status !== 201) {
       throw new Error(
         `Server returned ${response.status} ${response.statusText}`
       );
     }
-    const comment = await response.json();
+
+    const { post, comment } = response.data;
+
+    if (!post || !post.user) {
+      throw new Error("Post data is missing user information.");
+    }
 
     // Create notification
     await createNotification({
-      user: comment.post.user, // Assuming the post owner is available in the comment
+      user: post.user._id, // Ensure this is the correct field
       type: "comment",
       message: `${userId} commented on your post.`,
       entity: comment._id,
@@ -119,23 +113,68 @@ const likePost = async (id: string): Promise<void> => {
       },
       body: JSON.stringify({ userId }),
     });
+
     if (!response.ok) {
       throw new Error(
         `Server returned ${response.status} ${response.statusText}`
       );
     }
     const like = await response.json();
-
-    // Create notification
-    await createNotification({
-      user: like.post.user, // Assuming the post owner is available in the like
-      type: "like",
-      message: `${userId} liked your post.`,
-      entity: like._id,
-      entityModel: "Like",
-    });
   } catch (error: any) {
     console.error("Error:", error.message);
+    throw error;
+  }
+};
+
+// Function to create a notification
+const createNotification = async (notificationData: {
+  user: string;
+  type: string;
+  message: string;
+  entity: string;
+  entityModel: string;
+}) => {
+  const url = `${API_BASE_URL}/notifications`;
+  try {
+    console.log("Sending notification data:", notificationData); // Debugging line
+    const response = await axios.post(url, notificationData);
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Server returned ${response.status} ${response.statusText}`
+      );
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error creating notification:", error.message);
+    throw error;
+  }
+};
+const deleteNotification = async (notificationData: {
+  user: string;
+  entity: string;
+  type: string;
+  entityModel: string;
+}) => {
+  const url = `${API_BASE_URL}/notifications/delete`;
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(notificationData),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Server returned ${response.status} ${response.statusText}`
+      );
+    }
+    await response.json();
+  } catch (error: any) {
+    console.error("Error deleting notification:", error.message);
     throw error;
   }
 };

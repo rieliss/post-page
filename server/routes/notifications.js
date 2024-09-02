@@ -11,9 +11,10 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    const notifications = await Notification.find({ user: userId }).sort({
-      created_at: -1,
-    });
+    const notifications = await Notification.find({ user: userId })
+      .populate("user", "username email firstname lastname profile_picture")
+      .sort({ created_at: -1 });
+
     res.json(notifications);
   } catch (error) {
     res
@@ -44,6 +45,52 @@ router.post("/", async (req, res) => {
     res
       .status(500)
       .json({ message: "Error creating notification: " + error.message });
+  }
+});
+
+// Update notification to mark as read
+router.patch("/:id/mark-as-read", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const notification = await Notification.findByIdAndUpdate(
+      id,
+      { isRead: true },
+      { new: true }
+    );
+
+    if (!notification) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+
+    res.json(notification);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error updating notification: " + error.message });
+  }
+});
+
+// Delete a notification
+router.post("/delete", async (req, res) => {
+  const { user, entity, type, entityModel } = req.body;
+
+  if (!user || !entity || !type || !entityModel) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    await Notification.deleteOne({
+      user,
+      entity,
+      type,
+      entityModel,
+    });
+    res.status(200).json({ message: "Notification deleted" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error deleting notification: " + error.message });
   }
 });
 

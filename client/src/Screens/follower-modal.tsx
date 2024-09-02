@@ -93,13 +93,6 @@ export function FollowerModal({ userProfile }: any) {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("userProfile", userProfile);
-    console.log("currentUser", currentUser);
-    console.log("CheckFollower", CheckFollower);
-    console.log("myUser", myUser);
-  }, [currentUser, userProfile, CheckFollower, myUser]);
-
   return (
     <>
       <Button onClick={handleButtonClick} className="me-2">
