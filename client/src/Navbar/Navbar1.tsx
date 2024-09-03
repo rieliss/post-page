@@ -380,7 +380,7 @@ const Navbar1 = () => {
                   <div
                     className="row"
                     key={idx}
-                    onClick={() => handleClickCard(item._id)}
+                    // onClick={() => handleClickCard(item._id)}
                   >
                     <img src={item.image} alt="" />
                     <div className="heart-icon">

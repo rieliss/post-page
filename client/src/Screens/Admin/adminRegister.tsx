@@ -59,8 +59,6 @@ const RegisterAdmin: React.FC = () => {
         lastname,
       };
       const response = await registerAdmin(admin);
-      console.log(response); // ตรวจสอบ response ใน Console Log
-
       displayAlert("ลงทะเบียนสำเร็จ!");
     } catch (error) {
       console.error("Registration failed:", error);

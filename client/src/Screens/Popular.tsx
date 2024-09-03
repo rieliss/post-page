@@ -29,18 +29,15 @@ const Popular = () => {
   }, []);
 
   const handleClickCard = (id: string) => {
-    console.log(id);
     navigate(`/content/${id}`);
   };
 
   return (
     <div className="blogs">
-        <Navbar2/>
+      <Navbar2 />
       <section className="trending-post" id="trending">
         <div className="center-text">
-          <h2>
-           Most Popular
-          </h2>
+          <h2>Most Popular</h2>
         </div>
 
         <div className="blog">
@@ -53,7 +50,10 @@ const Popular = () => {
               >
                 <img src={feed.image} alt="" />
                 <div className="heart-icon">
-                  <IoIosHeartEmpty className="icon-heart" style={{ marginRight: "10px" }} />
+                  <IoIosHeartEmpty
+                    className="icon-heart"
+                    style={{ marginRight: "10px" }}
+                  />
                   <p>{feed.likes.length} likes</p>
                   <IoBookmarkOutline className="save-icon" />
                 </div>

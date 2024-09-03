@@ -198,58 +198,46 @@ router.post("/:id/comment", async (req, res) => {
 
   try {
     const post = await Post.findById(postId).populate("user");
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+    const user = await User.findById(author);
+
+    if (!post || !user) {
+      return res.status(404).json({ message: "Post or User not found" });
     }
 
     const comment = new Comment({ content, author, post: postId });
-    const savedComment = await comment.save();
-    post.comments.push(savedComment._id);
+    await comment.save();
+
+    post.comments.push(comment._id);
     await post.save();
 
-    // Create notification
-    const notification = new Notification({
+    const existingNotification = await Notification.findOne({
       user: post.user._id,
+      entity: postId,
       type: "comment",
-      message: `${author} commented on your post.`,
-      entity: savedComment._id,
       entityModel: "Post",
     });
-    await notification.save();
+
+    if (!existingNotification) {
+      const notification = new Notification({
+        user: post.user._id,
+        type: "comment",
+        message: `${user.firstname} ${
+          user.lastname || ""
+        } commented on your post.`,
+        entity: postId,
+        entityModel: "Post",
+      });
+      await notification.save();
+    }
 
     res.status(201).json({
       message: "Comment created successfully",
-      comment: savedComment,
+      comment,
       post: { user: post.user._id },
     });
   } catch (err) {
+    console.error("Error creating comment:", err);
     res.status(500).json({ message: "Error creating comment: " + err.message });
-  }
-});
-
-// Add this to your routes
-router.post("/notifications", async (req, res) => {
-  const { user, type, message, entity, entityModel } = req.body;
-
-  if (!user || !type || !message || !entity || !entityModel) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-
-  try {
-    const notification = new Notification({
-      user,
-      type,
-      message,
-      entity,
-      entityModel,
-    });
-    const savedNotification = await notification.save();
-    res.status(200).json(savedNotification);
-  } catch (error) {
-    console.error("Error creating notification:", error);
-    res
-      .status(500)
-      .json({ message: "Error creating notification: " + error.message });
   }
 });
 

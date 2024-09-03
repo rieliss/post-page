@@ -94,4 +94,40 @@ router.post("/delete", async (req, res) => {
   }
 });
 
+// Check if a similar notification already exists
+router.post("/check", async (req, res) => {
+  const { user, type, entity, entityModel } = req.body;
+
+  console.log("Received check request with data:", req.body); // Log the incoming request data
+
+  if (!user || !type || !entity || !entityModel) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    const existingNotification = await Notification.findOne({
+      user,
+      type,
+      entity,
+      entityModel,
+    });
+
+    if (existingNotification) {
+      console.log("Notification already exists:", existingNotification);
+      return res.status(200).json({
+        exists: true,
+        notification: existingNotification,
+      });
+    } else {
+      console.log("No matching notification found.");
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.error("Error during notification check:", error.message);
+    res.status(500).json({
+      message: "Error checking notification: " + error.message,
+    });
+  }
+});
+
 module.exports = router;

@@ -40,7 +40,6 @@ const Feeds = () => {
   }, []);
 
   const handleClickCard = (id: string) => {
-    console.log(id);
     navigate(`/content/${id}`);
   };
 

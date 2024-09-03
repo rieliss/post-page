@@ -76,26 +76,13 @@ const addComment = async (id: string, content: string): Promise<void> => {
       content,
     });
 
+    console.log("response", response);
+
     if (response.status !== 201) {
       throw new Error(
         `Server returned ${response.status} ${response.statusText}`
       );
     }
-
-    const { post, comment } = response.data;
-
-    if (!post || !post.user) {
-      throw new Error("Post data is missing user information.");
-    }
-
-    // Create notification
-    await createNotification({
-      user: post.user._id,
-      type: "comment",
-      message: `${userId} commented on your post.`,
-      entity: comment._id,
-      entityModel: "Comment",
-    });
   } catch (error: any) {
     console.error("Error:", error.message);
     throw error;
@@ -126,7 +113,6 @@ const likePost = async (id: string): Promise<void> => {
   }
 };
 
-// Function to create a notification
 const createNotification = async (notificationData: {
   user: string;
   type: string;
@@ -135,22 +121,39 @@ const createNotification = async (notificationData: {
   entityModel: string;
 }) => {
   const url = `${API_BASE_URL}/notifications`;
+
   try {
     console.log("Sending notification data:", notificationData);
+
+    const existingNotificationResponse = await axios.post(
+      `${API_BASE_URL}/notifications/check`,
+      notificationData
+    );
+
+    console.log("Check response:", existingNotificationResponse.data);
+
+    if (existingNotificationResponse.data.exists) {
+      console.log("Notification already exists, skipping creation.");
+      return existingNotificationResponse.data.notification;
+    }
+
     const response = await axios.post(url, notificationData);
+    console.log("Create notification response:", response.data);
 
     if (response.status !== 200) {
-      throw new Error(
-        `Server returned ${response.status} ${response.statusText}`
-      );
+      throw new Error(`Failed to create notification: ${response.statusText}`);
     }
 
     return response.data;
   } catch (error: any) {
-    console.error("Error creating notification:", error.message);
+    console.error(
+      "Error creating notification:",
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
+
 const deleteNotification = async (notificationData: {
   user: string;
   entity: string;

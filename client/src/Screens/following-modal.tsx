@@ -95,13 +95,6 @@ export function FollowingModal({ userProfile }: any) {
     }
   }, []);
 
-  //   useEffect(() => {
-  //     console.log("userProfile", userProfile);
-  //     console.log("currentUser", currentUser);
-  //     console.log("CheckFollowing", CheckFollowing);
-  //     console.log("myUser", myUser);
-  //   }, [currentUser, userProfile, CheckFollowing, myUser]);
-
   return (
     <>
       <Button onClick={handleButtonClick} className="me-2">

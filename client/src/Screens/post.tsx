@@ -46,8 +46,6 @@ function Writepost() {
         user: userId, // ส่ง userId โดยตรงเป็นสตริง
       };
 
-      // console.log(post);
-
       await createPost(post);
 
       alert("โพสต์บล็อกสำเร็จ!");
