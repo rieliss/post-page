@@ -6,7 +6,6 @@ export const fetchUserNav = async (id: string): Promise<any> => {
   }
 
   const url = `${API_BASE_URL}/nav`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {

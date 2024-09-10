@@ -76,8 +76,6 @@ const addComment = async (id: string, content: string): Promise<void> => {
       content,
     });
 
-    console.log("response", response);
-
     if (response.status !== 201) {
       throw new Error(
         `Server returned ${response.status} ${response.statusText}`
@@ -123,22 +121,16 @@ const createNotification = async (notificationData: {
   const url = `${API_BASE_URL}/notifications`;
 
   try {
-    console.log("Sending notification data:", notificationData);
-
     const existingNotificationResponse = await axios.post(
       `${API_BASE_URL}/notifications/check`,
       notificationData
     );
 
-    console.log("Check response:", existingNotificationResponse.data);
-
     if (existingNotificationResponse.data.exists) {
-      console.log("Notification already exists, skipping creation.");
       return existingNotificationResponse.data.notification;
     }
 
     const response = await axios.post(url, notificationData);
-    console.log("Create notification response:", response.data);
 
     if (response.status !== 200) {
       throw new Error(`Failed to create notification: ${response.statusText}`);

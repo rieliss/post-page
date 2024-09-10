@@ -3,7 +3,7 @@ import LoginPage from "./Screens/login";
 import RegistPage from "./Screens/register";
 import TestPage from "./Screens/test";
 import HomePage from "./Screens/home";
-import Navbar from "./Navbar/Navbar1";
+import Navbar1 from "./Navbar/Navbar1";
 import Profile from "./Screens/profile";
 import EditProfile from "./Screens/edit-profile";
 import RegisterAdmin from "./Screens/Admin/adminRegister";
@@ -31,7 +31,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegistPage />} />
-        <Route path="/nav" element={<Navbar />} />
+        <Route path="/nav" element={<Navbar1 />} />
         <Route path="/test" element={<TestPage />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/profile/edit-profile/:id" element={<EditProfile />} />

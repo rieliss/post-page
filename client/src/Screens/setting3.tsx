@@ -5,18 +5,18 @@ import "../misc/setting3.css";
 import { FaFacebookSquare } from "react-icons/fa";
 import { RiGitRepositoryPrivateFill } from "react-icons/ri";
 import { FaGoogle } from "react-icons/fa";
-import Navbar2 from "../Navbar/Navbar1";
+import Navbar1 from "../Navbar/Navbar1";
 import Sidebar from "../Screens/sidebar";
 
 function Setting2() {
   return (
     <div>
       <div>
-        <Navbar2 />
+        <Navbar1 />
+
         <Sidebar />
       </div>
 
-     
       <Container className="contain-setting">
         <div className="manageAcc">
           <h4>ความปลอดภัยและการเข้าสู่ระบบ</h4>

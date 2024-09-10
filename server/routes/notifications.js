@@ -98,8 +98,6 @@ router.post("/delete", async (req, res) => {
 router.post("/check", async (req, res) => {
   const { user, type, entity, entityModel } = req.body;
 
-  console.log("Received check request with data:", req.body); // Log the incoming request data
-
   if (!user || !type || !entity || !entityModel) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -113,13 +111,11 @@ router.post("/check", async (req, res) => {
     });
 
     if (existingNotification) {
-      console.log("Notification already exists:", existingNotification);
       return res.status(200).json({
         exists: true,
         notification: existingNotification,
       });
     } else {
-      console.log("No matching notification found.");
       return res.status(200).json({ exists: false });
     }
   } catch (error) {

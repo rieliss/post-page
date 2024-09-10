@@ -1,15 +1,14 @@
-import React from "react";
 import "../misc/home.css";
-import Navbar2 from "../Navbar/Navbar1";
 import Feeds from "./Feeds";
 import "../misc/home.css";
 import { IoIosArrowRoundForward, IoIosArrowRoundDown } from "react-icons/io";
 import Footer from "../Navbar/footer";
+import Navbar1 from "../Navbar/Navbar1";
 
 function HomePage() {
   return (
     <div className="home">
-      <Navbar2 />
+      <Navbar1 />
       <section className="main-home">
         <div className="main-text">
           <h5>แพลตฟอร์มแลกเปลี่ยนความคิดเห็น</h5>

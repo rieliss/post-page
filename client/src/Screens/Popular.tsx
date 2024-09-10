@@ -6,7 +6,7 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "react-bootstrap";
 import "../misc/feeds.css";
-import Navbar2 from "../Navbar/Navbar1";
+import Navbar1 from "../Navbar/Navbar1";
 
 const Popular = () => {
   const navigate = useNavigate();
@@ -34,7 +34,8 @@ const Popular = () => {
 
   return (
     <div className="blogs">
-      <Navbar2 />
+      <Navbar1 />
+
       <section className="trending-post" id="trending">
         <div className="center-text">
           <h2>Most Popular</h2>

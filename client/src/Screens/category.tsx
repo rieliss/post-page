@@ -14,10 +14,11 @@ import fashionC from "../pic/fashionC.png";
 import lifestyleC from "../pic/lifestyleC.png";
 import newsC from "../pic/newsC.png";
 import otherC from "../pic/otherC.png";
+import Navbar1 from "../Navbar/Navbar1";
 const Category = () => {
   return (
     <div>
-      <Navbar2 />
+      <Navbar1 />
 
       <div className="categoryPage" style={{ margin: " 2% 15%" }}>
         <Row>

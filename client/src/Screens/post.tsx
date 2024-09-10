@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import Navbar2 from "../Navbar/Navbar1";
 import "../misc/wp.css";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -17,6 +16,7 @@ import fashion from "../pic/clothes-hanger.png";
 import news from "../pic/newspaper.png";
 import other from "../pic/menu.png";
 import food from "../pic/restaurant.png";
+import Navbar1 from "../Navbar/Navbar1";
 
 function Writepost() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -86,7 +86,7 @@ function Writepost() {
   return (
     <div className="write-post-container">
       <div className="nav-post">
-        <Navbar2 />
+        <Navbar1 />
       </div>
       <div className="wp">
         <Row>

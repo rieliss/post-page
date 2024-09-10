@@ -2,7 +2,6 @@ const API_BASE_URL = "http://localhost:3001";
 
 export const loginUser = async (email: any, password: any): Promise<any> => {
   const url = `${API_BASE_URL}/login`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {

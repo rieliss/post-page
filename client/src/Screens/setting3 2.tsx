@@ -5,13 +5,13 @@ import "../misc/setting3.css";
 import { FaFacebookSquare } from "react-icons/fa";
 import { RiGitRepositoryPrivateFill } from "react-icons/ri";
 import { FaGoogle } from "react-icons/fa";
-import Navbar2 from "../Navbar/Navbar1";
+import Navbar1 from "../Navbar/Navbar1";
 
 function Setting2() {
   return (
     <div>
       <div>
-        <Navbar2 />
+        <Navbar1 />
       </div>
 
       <header className="header" role="banner">

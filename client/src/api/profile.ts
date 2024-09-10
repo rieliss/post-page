@@ -6,7 +6,6 @@ export const fetchUserProfile = async (id: string): Promise<any> => {
   }
 
   const url = `${API_BASE_URL}/profile/${id}`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {
@@ -124,7 +123,6 @@ export const deleteUserProfile = async (id: string): Promise<any> => {
 
 export const changePassword = async (data: any) => {
   const url = `${API_BASE_URL}/profile/changepassword`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {

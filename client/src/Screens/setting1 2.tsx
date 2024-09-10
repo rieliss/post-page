@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import "../misc/setting1.css";
-import Navbar2 from "../Navbar/Navbar1";
+import Navbar1 from "../Navbar/Navbar1";
 
 function Setting() {
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -36,7 +36,7 @@ function Setting() {
 
   return (
     <div>
-      <Navbar2 />
+      <Navbar1 />
       <header className="header" role="banner">
         <div className="nav-wrap">
           <nav className="main-nav" role="navigation">
@@ -115,23 +115,21 @@ function Setting() {
                 value={passwordConfirmation}
                 onChange={(e) => setPasswordConfirmation(e.target.value)}
               />
-              
-            <button
-              className="confirm-delete"
-              onClick={handleSubmitPasswordConfirmation}
-            >
-              ยืนยัน
-            </button>
 
-            <button
-              className="cancel-delete"
-              onClick={handleCancelDeleteConfirmation}
-            >
-              ยกเลิก
-            </button>
+              <button
+                className="confirm-delete"
+                onClick={handleSubmitPasswordConfirmation}
+              >
+                ยืนยัน
+              </button>
 
+              <button
+                className="cancel-delete"
+                onClick={handleCancelDeleteConfirmation}
+              >
+                ยกเลิก
+              </button>
             </div>
-            
           </div>
         </div>
       )}

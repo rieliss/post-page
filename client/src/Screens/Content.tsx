@@ -13,6 +13,7 @@ import Navbar2 from "../Navbar/Navbar1";
 import { LuHeart } from "react-icons/lu";
 import { FaRegComment } from "react-icons/fa";
 import { MdOutlineBookmarkBorder } from "react-icons/md";
+import Navbar1 from "../Navbar/Navbar1";
 
 const Content = () => {
   let { id } = useParams();
@@ -41,8 +42,11 @@ const Content = () => {
     try {
       await addComment(id as string, comment);
       setComment("");
-      navigate(0);
-    } catch (error) {}
+      const res = await getPostById(id as string);
+      setPost(res);
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
   };
 
   const handleLike = async () => {
@@ -56,7 +60,7 @@ const Content = () => {
   return (
     <>
       <div>
-        <Navbar2 />
+        <Navbar1 />
       </div>
       <div className="container-con">
         {post && !loading && (

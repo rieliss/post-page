@@ -1,15 +1,12 @@
 import { Container } from "react-bootstrap";
 import "../misc/setting2.css";
-import Navbar2 from "../Navbar/Navbar1";
-// import { IoNotifications } from "react-icons/io5";
-// import { MdEmail } from "react-icons/md";
-// import { FaCommentAlt } from "react-icons/fa";
+import Navbar1 from "../Navbar/Navbar1";
 
 function Setting2() {
   return (
     <div>
       <div>
-        <Navbar2 />
+        <Navbar1 />
       </div>
 
       <header className="header" role="banner">

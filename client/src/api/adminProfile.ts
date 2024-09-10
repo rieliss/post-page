@@ -6,7 +6,6 @@ export const fetchAdminProfile = async (id: string): Promise<any> => {
   }
 
   const url = `${API_BASE_URL}/admin/${id}`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {

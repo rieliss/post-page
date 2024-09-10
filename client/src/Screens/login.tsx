@@ -100,7 +100,6 @@ const Login: React.FC = () => {
   const handleLogin = useCallback(async () => {
     try {
       const url = `http://localhost:3001/login`;
-      console.log("Request URL:", url);
 
       const response = await fetch(url, {
         method: "POST",

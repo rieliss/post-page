@@ -5,7 +5,7 @@ import { IoCamera } from "react-icons/io5";
 import { FaUserFriends } from "react-icons/fa";
 import { Form, Col, Row, Alert, Container } from "react-bootstrap";
 import Footer from "../Navbar/footer";
-import Navbar2 from "../Navbar/Navbar1";
+import Navbar1 from "../Navbar/Navbar1";
 
 const EditProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -133,7 +133,7 @@ const EditProfile: React.FC = () => {
 
   return (
     <div>
-      <Navbar2 />
+      <Navbar1 />
       <Form className="profile ">
         <div className="profile">
           <Form.Group

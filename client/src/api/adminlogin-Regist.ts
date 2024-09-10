@@ -2,7 +2,6 @@ const API_BASE_URL = "http://localhost:3001";
 
 export const registerAdmin = async (admin: any): Promise<any> => {
   const url = `${API_BASE_URL}/admin/register`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {
@@ -35,7 +34,6 @@ export const registerAdmin = async (admin: any): Promise<any> => {
 
 export const loginAdmin = async (email: any, password: any): Promise<any> => {
   const url = `${API_BASE_URL}/admin/login`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {

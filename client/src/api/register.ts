@@ -2,7 +2,6 @@ const API_BASE_URL = "http://localhost:3001";
 
 const registerUser = async (user: any): Promise<any> => {
   const url = `${API_BASE_URL}/register`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {

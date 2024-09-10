@@ -6,7 +6,6 @@ export const fetchProfile = async (me: string | null): Promise<any> => {
   }
 
   const url = `${API_BASE_URL}/follow/${me}`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {
@@ -54,7 +53,6 @@ export const fetchFollow = async (me: string | null): Promise<any> => {
   }
 
   const url = `${API_BASE_URL}/follow/users/${me}`;
-  console.log("Request URL:", url);
 
   try {
     const response = await fetch(url, {
@@ -82,7 +80,6 @@ export const fetchFollow = async (me: string | null): Promise<any> => {
     } else {
       console.error("Response does not contain ID:", responseData);
     }
-    console.log("responseData", responseData);
     return responseData;
   } catch (error) {
     console.error("Error:", (error as Error).message);

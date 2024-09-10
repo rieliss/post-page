@@ -73,12 +73,10 @@ const RegisterForm: React.FC = () => {
         date_of_birth,
       };
       const response = await registerUser(user);
-      console.log(response); // ตรวจสอบ response ใน Console Log
 
       displayAlert("ลงทะเบียนสำเร็จ!");
     } catch (error) {
       console.error("Registration failed:", error);
-
       displayAlert("คุณมีบัญชีอยู่แล้ว โปรดเข้าสู่ระบบ");
     }
   };
@@ -103,7 +101,6 @@ const RegisterForm: React.FC = () => {
         };
 
         const registerResponse = await registerUser(user);
-        console.log(registerResponse);
 
         displayAlert("ลงทะเบียนสำเร็จ!");
       } else {
@@ -131,7 +128,6 @@ const RegisterForm: React.FC = () => {
 
       registerUser(user)
         .then((registerResponse) => {
-          console.log(registerResponse);
           displayAlert("ลงทะเบียนสำเร็จ!");
         })
         .catch((error) => {
@@ -168,7 +164,6 @@ const RegisterForm: React.FC = () => {
         };
 
         const registerResponse = await registerUser(user);
-        console.log(registerResponse);
 
         displayAlert("ลงทะเบียนสำเร็จ!");
       } else {
@@ -195,7 +190,6 @@ const RegisterForm: React.FC = () => {
       };
       registerUser(user)
         .then((registerResponse) => {
-          console.log(registerResponse);
           displayAlert("ลงทะเบียนสำเร็จ!");
         })
         .catch((error) => {

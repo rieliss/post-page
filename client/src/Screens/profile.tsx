@@ -6,7 +6,6 @@ import { FaUserFriends } from "react-icons/fa";
 import { Form } from "react-bootstrap";
 import "../misc/edit-profile.css";
 import "../misc/profile.css";
-import Navbar2 from "../Navbar/Navbar1";
 import { Button, Nav, Tab } from "react-bootstrap";
 import { CiSaveDown2 } from "react-icons/ci";
 import { IoMdHeart } from "react-icons/io";
@@ -15,6 +14,7 @@ import ProfileFeeds from "./profile-feed";
 import { FollowingModal } from "./following-modal";
 import { FollowerModal } from "./follower-modal";
 import Footer from "../Navbar/footer";
+import Navbar1 from "../Navbar/Navbar1";
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
@@ -96,7 +96,7 @@ const Profile = () => {
 
   return (
     <div>
-      <Navbar2 />
+      <Navbar1 />
       <Form className="profile">
         <div className="profile">
           <div className="coverpic">

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import "../misc/setting1.css";
-import Navbar2 from "../Navbar/Navbar1";
 import { changePassword, deleteUserProfile } from "../api/profile";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Screens/sidebar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import Navbar1 from "../Navbar/Navbar1";
 
 const getUserFromLocalStorage = (): any => {
   const userString = localStorage.getItem("user");
@@ -78,7 +78,8 @@ function Setting() {
 
   return (
     <div>
-      <Navbar2 />
+      <Navbar1 />
+
       <Sidebar />
 
       <Container className="contain-setting">

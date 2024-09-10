@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 import "../misc/setting2.css";
-import Navbar2 from "../Navbar/Navbar1";
+import Navbar1 from "../Navbar/Navbar1";
 import Sidebar from "../Screens/sidebar";
 // import { IoNotifications } from "react-icons/io5";
 // import { MdEmail } from "react-icons/md";
@@ -10,11 +10,10 @@ function Setting2() {
   return (
     <div>
       <div>
-      <Navbar2/>
-      <Sidebar/>
-    </div>
+        <Navbar1 />
+        <Sidebar />
+      </div>
 
-      
       <Container className="contain-setting">
         <div className="manageAcc">
           <h4>จัดการบัญชีผู้ใช้</h4>

@@ -132,7 +132,6 @@ const Navbar1 = () => {
           );
         }
         const posts = await response.json();
-        console.log("Search results:", posts);
         setSearchResult(posts);
       } catch (error) {
         console.error("Error fetching posts:", error);
