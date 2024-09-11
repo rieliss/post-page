@@ -12,15 +12,21 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: function (origin, callback) {
+      if (/^http:\/\/localhost:\d+$/.test(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(express.json());
 
 const mongoURL =
   "mongodb+srv://khessarin:4zY0GVP699nSH0zf@admin.uf1d0.mongodb.net/";
-// "mongodb+srv://khessarin:27JzYilS2g1f60TO@cluster0.dunj9.mongodb.net/";
 mongoose.connect(mongoURL);
 
 const connection = mongoose.connection;
