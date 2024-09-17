@@ -27,7 +27,6 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         if (id) {
-          // const me = localStorage.getItem("userId");
           const profileData = await fetchUserProfile(id);
           setUserProfile(profileData);
           setCheckUser(localStorage.getItem("userId") === id);
@@ -39,6 +38,7 @@ const Profile = () => {
         console.error("Error fetching profile data:", error);
       }
     };
+
     fetchData();
   }, [id]);
 
@@ -54,17 +54,15 @@ const Profile = () => {
       });
       if (!response.ok) {
         const statusText = response.statusText || "Unknown Error";
-        throw new Error(
-          `Server returned ${response.status} ${statusText} for ${API_BASE_URL}`
-        );
+        throw new Error(`Server returned ${response.status} ${statusText}`);
       }
       const followerData = await response.json();
       setUserProfile(followerData.newFollow);
       setIsFollowing(followerData.newFollow.if_followed);
     } catch (error) {
-      console.error("Error:", (error as Error).message);
+      console.error("Error following user:", (error as Error).message);
     }
-  }, [id, isFollowing]);
+  }, [id]);
 
   const handleUnfollow = useCallback(async () => {
     const API_BASE_URL_DELETE = "http://localhost:3001/follow/delete";
@@ -78,17 +76,15 @@ const Profile = () => {
       });
       if (!response.ok) {
         const statusText = response.statusText || "Unknown Error";
-        throw new Error(
-          `Server returned ${response.status} ${statusText} for ${API_BASE_URL_DELETE}`
-        );
+        throw new Error(`Server returned ${response.status} ${statusText}`);
       }
       const res = await response.json();
       setUserProfile(res.unFollow);
       setIsFollowing(false);
     } catch (error) {
-      console.error("Error:", (error as Error).message);
+      console.error("Error unfollowing user:", (error as Error).message);
     }
-  }, [id, isFollowing]);
+  }, [id]);
 
   const handleEdit = () => {
     navigate(`/profile/edit-profile/${id}`);
@@ -228,12 +224,6 @@ const Profile = () => {
         <div>
           <ProfileFeeds />
         </div>
-        {/* <Tab.Content>
-          <Tab.Pane eventKey="home-tab">Home content</Tab.Pane>
-          <Tab.Pane eventKey="profile-tab">Profile content</Tab.Pane>
-          <Tab.Pane eventKey="contact-tab">Contact content</Tab.Pane>
-          <Tab.Pane eventKey="disabled-tab">Disabled content</Tab.Pane>
-        </Tab.Content> */}
       </Tab.Container>
       <Footer />
     </div>

@@ -192,13 +192,11 @@ router.post("/:id/likes", async (req, res) => {
 });
 
 // Add comment
-// Add comment
 router.post("/:id/comment", async (req, res) => {
   const postId = req.params.id;
   const { content, author } = req.body;
 
   try {
-    // Find the post and user
     const post = await Post.findById(postId).populate("user");
     const user = await User.findById(author);
 
@@ -206,15 +204,12 @@ router.post("/:id/comment", async (req, res) => {
       return res.status(404).json({ message: "Post or User not found" });
     }
 
-    // Create and save the comment
     const comment = new Comment({ content, author, post: postId });
     await comment.save();
 
-    // Add the comment to the post
     post.comments.push(comment._id);
     await post.save();
 
-    // Check if a notification already exists for this post
     const existingNotification = await Notification.findOne({
       user: post.user._id,
       entity: postId,
@@ -222,7 +217,6 @@ router.post("/:id/comment", async (req, res) => {
       entityModel: "Post",
     });
 
-    // Create a notification if one does not exist
     if (!existingNotification) {
       const notification = new Notification({
         user: post.user._id,
@@ -236,7 +230,6 @@ router.post("/:id/comment", async (req, res) => {
       await notification.save();
     }
 
-    // Return the comment ID and the updated post like in the `like` API
     res.status(201).json({
       message: "Comment created successfully",
       post,

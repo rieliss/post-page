@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../Navbar/navbar1.css";
 import logoKKU from "../pic/logo-head.jpg";
@@ -168,10 +174,6 @@ const Navbar1 = () => {
     setIsOpen(false);
   };
 
-  const handleClickCard = (id: string) => {
-    navigate(`/content/${id}`);
-  };
-
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -197,6 +199,7 @@ const Navbar1 = () => {
 
   const handleNotificationClick = async (
     e: React.MouseEvent<HTMLAnchorElement>,
+    type: string,
     notificationId: string,
     entityId: string
   ) => {
@@ -215,7 +218,11 @@ const Navbar1 = () => {
         )
       );
 
-      navigate(`/content/${entityId}`);
+      if (type == "follow") {
+        navigate(`/profile/${entityId}`);
+      } else {
+        navigate(`/content/${entityId}`);
+      }
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
     }
@@ -231,6 +238,24 @@ const Navbar1 = () => {
       console.error("Error fetching notifications:", error);
     }
   };
+
+  const NotificationIcon = ({ notificationCount }: any) => {
+    return (
+      <div
+        style={{ position: "relative", display: "inline-block" }}
+        onClick={toggleNotiMenu}
+      >
+        <IoNotificationsOutline size={24} />
+        {notificationCount > 0 && (
+          <span className="notification-badge">{notificationCount}</span>
+        )}
+      </div>
+    );
+  };
+
+  const unreadCount = useMemo(() => {
+    return notifications.filter((notification) => !notification.isRead).length;
+  }, [notifications]);
 
   return (
     <div className="navbarreal">
@@ -267,7 +292,8 @@ const Navbar1 = () => {
             />
           </div>
           <div>
-            <IoNotificationsOutline onClick={toggleNotiMenu} />
+            {/* <IoNotificationsOutline onClick={toggleNotiMenu} /> */}
+            <NotificationIcon notificationCount={unreadCount} />
             {isNotiOpen && (
               <div className="dropdown-itemnoti" style={{ padding: "1rem" }}>
                 <h2>Notifications</h2>
@@ -289,10 +315,10 @@ const Navbar1 = () => {
                         }}
                       >
                         <a
-                          href={`/content/${notification.entity}`}
                           onClick={(e) =>
                             handleNotificationClick(
                               e,
+                              notification.type,
                               notification._id,
                               notification.entity
                             )
@@ -301,6 +327,8 @@ const Navbar1 = () => {
                           {notification.type === "like" &&
                             `${notification.message}`}
                           {notification.type === "comment" &&
+                            `${notification.message}`}
+                          {notification.type === "follow" &&
                             `${notification.message}`}
                         </a>
                       </li>
