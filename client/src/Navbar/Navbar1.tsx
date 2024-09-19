@@ -186,9 +186,14 @@ const Navbar1 = () => {
       }
     };
 
-    if (userId) {
-      fetchNotifications();
-    }
+    // Fetch notifications initially
+    fetchNotifications();
+
+    // Set up polling with setInterval
+    const intervalId = setInterval(fetchNotifications, 5000); // Fetch every 5 seconds
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
   }, [userId]);
 
   const handleLogout = useCallback(() => {
